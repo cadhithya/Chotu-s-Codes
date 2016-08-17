@@ -15,14 +15,14 @@ class Codechef
         semi=(a+b+c)/2;
         double area = semi*(semi-a)*(semi-b)*(semi-c);
         double ans=Math.sqrt(area);
-        if(ans-((int)(ans))!=0)
+        if(ans-((int)(ans))!=0) // 14.45 - 14 ! = 0 This is used to check if there is a decimal point
         {
-            System.out.printf("%.1f",ans);
+            System.out.printf("%.1f",ans); // Here I am printing the double value formatted to single digit 
         }
         
         else
         {
-            System.out.println((int)ans);
+            System.out.println((int)ans); // Here I am printing the (int) value of the double: EG int(14.5) = 14
         }
         
     }
