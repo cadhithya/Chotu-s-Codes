@@ -37,7 +37,6 @@ class codeChef {
 
 2) USING list.next.next.next . additon :
 
-
 class LinkedList {
  
     static Node head;
@@ -75,8 +74,8 @@ class LinkedList {
             return;
         }
  
-        Node prev = node;
-        while (prev.next != null && prev.next != ) {
+        Node prev = list;
+        while (prev.next != null && prev.next != last) {
             prev = prev.next;
         }
  
@@ -101,7 +100,7 @@ class LinkedList {
  
     public static void main(String[] args) {
         LinkedList list = new LinkedList();
-        for(int i=0;i<5;i++);
+        
        
         list.head = new Node(12);
         list.head.next = new Node(15);
@@ -115,7 +114,9 @@ class LinkedList {
         
     
         System.out.println("Before deletion \n \n ");
-        System.out.println(head);
+        
+        
+        list.printList(head);
     
         System.out.println("\n \n Deleting last Node \n \n ");
         list.deleteNode(head, head.next.next.next.next.next.next.next);
@@ -126,6 +127,7 @@ class LinkedList {
  
     }
 }
+
 
  
 
