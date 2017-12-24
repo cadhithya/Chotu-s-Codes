@@ -1,0 +1,51 @@
+//TESTPROC PROC                                                         
+//********************************************************************* 
+//*                                                                     
+//*                        PROCEDURE OVERVIEW                           
+//*                        ------------------                           
+//* PROC     DESCRIPTION                                                
+//* TESTPROC DB2 ASSESSMENT                                             
+//*                                                                     
+//*                        PROCEDURE SUMMARY                            
+//*                        -----------------                            
+//* STEP     PROGRAM  FUNCTION                                          
+//* R010     IKJEFT1A CALLING DB2 PROGRAM                               
+//*                                                                     
+//********************************************************************* 
+//*                                                                     
+//*                        CHANGE HISTORY                               
+//*                        --------------                               
+//*                                                                     
+//*    DATE   USERID  RMDY/PRJ # DESCRIPTION                            
+//*  20170818 TSORKUM 63747      DB2 ASSESSMENT                         
+//********************************************************************* 
+//*                                                                     
+//*                                                                     
+//*-------------------------------------------------------------------- 
+//* STEP:    R010                                                       
+//* DESCR:   CALLING DB2 PROGRAM                                        
+//* PROGRAM: IKJEFT1A                                                   
+//* RESTARTABLE? _X_ YES  ___ NO                                        
+//* RESTART: CAN BE RESTARTED                                           
+//*                                                                     
+//* NOTES:   ____________________________________                       
+//*          ____________________________________                       
+//*-------------------------------------------------------------------- 
+//R010 EXEC PGM=IKJEFT1A,COND=(0,NE),PARM='100201497'                   
+//STEPLIB INCLUDE MEMBER=SLIBDUMM                                       
+//        INCLUDE MEMBER=SLIBDEV1                                       
+//        INCLUDE MEMBER=SLDBTDB2                                       
+ //INDD1     DD DSN=TSOAVAR.PS1,DISP=SHR                                 
+ //INDD2    DD DSN=TSOAVAR.PS3,DISP=SHR                                  
+ //SYSTSIN  DD DSN=ENDEVOR.PROD.CNTLCARD,DISP=SHR                        
+ //SYSPRINT DD SYSOUT=*                                                  
+ //SYSOUT   DD SYSOUT=*                                                  
+ //SYSTSPRT DD SYSOUT=*                                                  
+ //SYSUDUMP DD SYSOUT=*                                                  
+ //CEEDUMP  DD SYSOUT=*                                                  
+ //SYSABEND DD SYSOUT=*                                                  
+ // PEND                                                                 
+ //*                                                                     
+ //********************************************************************* 
+ //*          END OF PROCEDURE TESTPROC                                  
+ //********************************************************************* 

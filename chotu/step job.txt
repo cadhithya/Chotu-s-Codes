@@ -1,0 +1,21 @@
+ //TSOAVARA JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,       
+ //            MSGLEVEL=(1,1)                                          
+ //S1       EXEC PGM=IEBGENR                                           
+ //SYSPRINT DD   SYSOUT=*                                              
+ //SYSIN    DD   DUMMY                                                 
+ //SYSUT1   DD   DSN=TSOAVAR.CHOTU.PROGRAMS.PS4,DISP=SHR               
+ //SYSUT2   DD   SYSOUT=*                                              
+ //S2  EXEC PGM=IEBGENR,COND=(4,GE,S1)                                 
+ //SYSPRINT DD   SYSOUT=*                                              
+ //SYSUT1   DD *                                                       
+   COPY UNSUCCESSFULL                                                  
+ /*                                                                    
+ //SYSUT2   DD SYSOUT=*                                                
+ //SYSIN    DD   DUMMY                                                 
+ //S3  EXEC PGM=IEBGENR,COND=(4,LE,S1)                                 
+ //SYSPRINT DD  SYSOUT=*                                               
+ //SYSUT1   DD *                                                       
+   COPY SUCCESSFULL                                                    
+/*                                                                     
+//SYSUT2   DD SYSOUT=*                                                 
+//SYSIN    DD DUMMY                                                    

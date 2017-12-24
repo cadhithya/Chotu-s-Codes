@@ -1,0 +1,28 @@
+       IDENTIFICATION DIVISION.                                         
+       PROGRAM-ID. TRN16901.                                            
+       ENVIRONMENT DIVISION.                                            
+       DATA DIVISION.                                                   
+       WORKING-STORAGE SECTION.                                         
+           EXEC SQL                                                     
+              INCLUDE SQLCA                                             
+           END-EXEC.                                                    
+           EXEC SQL                                                     
+              INCLUDE TRNGDEPT                                          
+           END-EXEC.                                                    
+       PROCEDURE DIVISION.                                              
+       1000-MAIN-PARA.                                                  
+           EXEC SQL                                                     
+              SELECT DEPT_NUMBER,DEPT_NAME                              
+              INTO                                                      
+              :DEP-DEPT-NUMBER,                                         
+              :DEP-DEPT-NAME                                            
+              SELECT dEPT_NUMBER,DEPT_NAME                       
+              INTO                                               
+              :DEP-DEPT-NUMBER,                                  
+              :DEP-DEPT-NAME                                     
+              FROM DEPT_TABLE                                    
+              WHERE DEPT_NUMBER = 91                             
+           END-EXEC.                                             
+           DISPLAY DEP-DEPT-NUMBER.                              
+           DISPLAY DEP-DEPT-NAME.                                
+           STOP RUN.                                             

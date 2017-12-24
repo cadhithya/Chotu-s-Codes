@@ -1,0 +1,10 @@
+ ***************************** Top of Data ******************************
+ //TSOAVARC JOB 12231,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,         
+ //         MSGLEVEL=(1,1)                                               
+ //R010     EXEC PGM=TRN16901                                            
+ //STEPLIB  DD DSN=ENDEVOR.DEV1.LOAD,DISP=SHR                            
+ //*INDD     DD DSN=TSOAVAR.CHOTU.PROGRAMS(PS4),DISP=SHR                 
+ //*OTDD    DD DSN=TSOAVAR.CHOTU.KSDS,DISP=OLD                           
+ //SYSPRINT DD SYSOUT=*                                                  
+ //SYSOUT   DD SYSOUT=*                                                  
+ //SYSIN    DD DUMMY                                                     

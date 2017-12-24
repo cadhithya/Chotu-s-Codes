@@ -1,0 +1,11 @@
+//TSOAVARA JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,        
+//         MSGLEVEL=(1,1)                                              
+//P1       EXEC PGM=SORT                                               
+//SORTIN   DD DSN=TSOAVAR.CHOTU.PROGRAMS(PS1),DISP=SHR                 
+//SORTOUT  DD SYSOUT=*                                                 
+//SYSOUT   DD SYSOUT=*                                                 
+//SYSIN    DD *                                                        
+           SORT FIELDS=(11,2,ZD,D)                                     
+           SUM FIELDS=(14,6,ZD)                                        
+           OUTREC FIELDS=(C'AGE ',11,2,C' SALARY ',14,6)               
+/*                                                                     

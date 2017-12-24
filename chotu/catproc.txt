@@ -1,0 +1,15 @@
+ //CATPROC    PROC                                                       
+ //R010       EXEC PGM=CHOJIN1                                           
+ //STEPLIB  DD  DSN=ENDEVOR.DEV1.LOAD,DISP=SHR                           
+ //SYSOUT   DD  SYSOUT=*                                                 
+ //INDD1    DD  DSN=TSOAVAR.CHOTU.PROGRAMS.PS1,DISP=SHR                  
+ //OUTDD    DD  SYSOUT=*                                                 
+ //SYSIN    DD  DUMMY                                                    
+ //R020     EXEC PGM=IEBGENR,COND=(0,GT)                                 
+ //SYSPRINT DD   SYSOUT=*                                                
+ //SYSIN    DD   DUMMY                                                   
+ //SYSUT1   DD   DSN=TSOAVAR.PROGRAMS.PS1,DISP=SHR                       
+ //SYSUT2   DD   DSN=TSOAVAR.CHOTU.MYGDG1(+1),DISP=(NEW,CATLG,DELETE),   
+ //           DCB=(LRECL=120,BLKSIZE=1200,RECFM=FB,DSORG=PS),            
+ //           SPACE=(TRK,(10,5))                                         
+ //     PEND                                                             

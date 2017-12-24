@@ -1,0 +1,5 @@
+    DSN SYSTEM(TDB2)               
+    RUN PROGRAM(TRNASMT3)-         
+        PLAN(TRNASMT3)             
+    END                            
+*************************** Bottom 

@@ -1,0 +1,10 @@
+//TSOAVARC JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,         
+//         MSGLEVEL=(1,1)                                               
+//S1       EXEC PGM=IDCAMS                                              
+//DD1      DD DSN=TSOAVAR.CHOTU.PROGRAMS(PS4),DISP=SHR                  
+//DD2      DD DSN=TSOAVAR.CHOTU.KSDS,DISP=SHR                           
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+          REPRO INFILE(DD1) OUTFILE(DD2)                                
+/*                                                                      

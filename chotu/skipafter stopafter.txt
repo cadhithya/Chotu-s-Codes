@@ -1,0 +1,17 @@
+//TSOAVARA JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,         
+//         MSGLEVEL=(1,1)                                               
+//P1       EXEC PGM=SORT                                                
+//SORTIN   DD DSN=TSOAVAR.CHOTU.PROGRAMS(PS1),DISP=SHR                  
+//D1       DD SYSOUT=*                                                  
+//D2       DD SYSOUT=*                                                  
+//D3       DD SYSOUT=*                                                  
+//D4       DD SYSOUT=*                                                  
+//D5       DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+           SORT FIELDS=COPY (SKIPREC=2,STOPAFT=3)                       
+           OUTFIL FNAMES=D1,INCLUDE=(11,2,CH,EQ,C'17')                  
+           OUTFIL FNAMES=D2,INCLUDE=(11,2,CH,EQ,C'20')                  
+           OUTFIL FNAMES=D3,INCLUDE=(11,2,CH,EQ,C'21')                  
+           OUTFIL FNAMES=D5,SAVE                                        
+/*                                                                      

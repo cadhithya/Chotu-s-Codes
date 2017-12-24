@@ -1,0 +1,28 @@
+ IDENTIFICATION DIVISION.                                               
+ PROGRAM-ID. TRN1698G.                                                  
+ ENVIRONMENT DIVISION.                                                  
+ DATA DIVISION.                                                         
+ WORKING-STORAGE SECTION.                                               
+ 01 NUM1     PIC 99 VALUE 01.                                           
+ 01 QO       PIC 99 VALUE 01.                                           
+ 01 THREE    PIC 99 VALUE 01.                                           
+ 01 FIVE     PIC 99 VALUE 01.                                           
+ 01 SUMTHREE PIC 99 VALUE 00.                                           
+ 01 SUMFIVE  PIC 99 VALUE 00.                                           
+ PROCEDURE DIVISION.                                                    
+      PERFORM UNTIL NUM1 > 25                                           
+         DIVIDE NUM1 BY 3 GIVING QO REMAINDER THREE                     
+         DIVIDE NUM1 BY 5 GIVING QO REMAINDER FIVE                      
+         EVALUATE TRUE                                                  
+         WHEN THREE = 0 AND FIVE = 0                                    
+         DISPLAY 'INAUTIX'                                              
+        COMPUTE SUMFIVE = SUMFIVE + NUM1                              
+        WHEN THREE = 0 AND FIVE NOT = 0                               
+        DISPLAY 'BNY'                                                 
+        COMPUTE SUMTHREE = SUMTHREE + NUM1                            
+        END-EVALUATE                                                  
+        COMPUTE NUM1 = NUM1 + 1                                       
+     END-PERFORM.                                                     
+     DISPLAY SUMTHREE,' IS THE SUM OF NOS DIV BY 3'.                  
+     DISPLAY SUMFIVE,' IS THE SUM OF NOS DIV BY 5'.                   
+     STOP RUN.                                                        

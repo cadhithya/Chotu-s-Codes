@@ -1,0 +1,38 @@
+IDENTIFICATION DIVISION.                                               
+PROGRAM-ID. TRN1698J.                                                  
+ENVIRONMENT DIVISION.                                                  
+DATA DIVISION.                                                         
+WORKING-STORAGE SECTION.                                               
+01 UNITS PIC 9(4) VALUE ZEROS.                                         
+01 BILL  PIC 9(4)V99 VALUE ZEROS.                                      
+01 BILL1 PIC Z(4).99.                                                  
+PROCEDURE DIVISION.                                                    
+1000-MAIN-PARA.                                                        
+        PERFORM 2000-ACCEPT-PARA.                                      
+        PERFORM 3000-BILL-PARA.                                        
+        STOP RUN.                                                      
+*************ACCEPT PARA************                                   
+2000-ACCEPT-PARA.                                                      
+        ACCEPT UNITS.                                                  
+        IF UNITS >= 0 AND UNITS <=100 THEN                             
+              COMPUTE BILL = BILL + 50                                 
+        ELSE IF UNITS >=101 AND UNITS <=150 THEN                       
+              COMPUTE BILL = BILL + 50 +( 3 * (UNITS - 100))           
+        ELSE IF UNITS >= 151 AND UNITS <=200 THEN                      
+              COMPUTE BILL = BILL + 50 + 300 + ( 3.5 *                 
+                             ( UNITS - 151) )                          
+        ELSE IF UNITS >= 201 AND UNITS <=300 THEN                      
+              COMPUTE BILL = BILL + 50 + 1800 + 350 +                  
+              ( 4 * (UNITS - 200))                                     
+        ELSE IF UNITS >300 THEN                                        
+              COMPUTE BILL = BILL + 50 + 1800 + 350 +                  
+              400 +( (UNITS - 300) * 5 )                               
+        END-IF                                                         
+        END-IF                                                         
+        END-IF                                                         
+        END-IF                                                         
+        END-IF.                                                        
+*****************************BILLPARA****************                  
+3000-BILL-PARA.                                                        
+        MOVE BILL TO BILL1  
+         DISPLAY '   THE BILL AMOUNT IS  ',BILL1.                                                                                                                                       

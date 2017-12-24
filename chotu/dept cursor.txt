@@ -1,0 +1,76 @@
+ IDENTIFICATION DIVISION.                                         
+ PROGRAM-ID. TRN471DB.                                            
+ ENVIRONMENT DIVISION.                                            
+ INPUT-OUTPUT SECTION.                                            
+ FILE-CONTROL.                                                    
+       SELECT EMPFILE ASSIGN TO INDD                              
+       ORGANIZATION IS SEQUENTIAL                                 
+       ACCESS MODE IS SEQUENTIAL                                  
+       FILE STATUS IS WS-FS.                                      
+ DATA DIVISION.                                                   
+ FILE SECTION.                                                    
+ FD EMPFILE.                                                      
+ 01 EMPREC.                                                       
+    02 FS-DEPT-NUMBER PIC Z(9).                                   
+    02 SPACE1   PIC X(5).                                         
+    02 FS-DEPT-NAME PIC X(40).                                    
+    02 REM    PIC X(26).                                          
+ WORKING-STORAGE SECTION.                                         
+ 01 WS-FS PIC XX.                                                 
+ 01 WS-FOS PIC X VALUE 'N'.                                       
+ 01 WS-DEPT-TABLE.                                                
+    02 WS-DEPT-NUMBER PIC S9(9).                                  
+    02 WS-DEPT-NAME PIC X(40).                                    
+    02 FILLER PIC X(31).                                          
+       EXEC  SQL                                                  
+       INCLUDE SQLCA                                              
+       END-EXEC.                                                  
+       EXEC  SQL                                                  
+       INCLUDE TRNGDEPT                                           
+       END-EXEC.                                                  
+       EXEC  SQL                                                  
+       DECLARE CURS CURSOR                                        
+       FOR SELECT DEPT_NUMBER,DEPT_NAME FROM DEPT_TABLE           
+       WHERE DEPT_NUMBER<80                                       
+       FOR READ ONLY                                              
+       END-EXEC.                                                  
+ PROCEDURE DIVISION.                                              
+ 1000-MAIN-PARA.                                               
+           OPEN OUTPUT EMPFILE.                                
+           PERFORM OPEN-CURSOR.                                
+           PERFORM FETCH-CURSOR UNTIL WS-FOS='Y'               
+           PERFORM CLOSE-CURSOR.                               
+           CLOSE EMPFILE.                                      
+           PERFORM CLOSE-PARA.                                 
+ OPEN-CURSOR.                                                  
+             EXEC SQL                                          
+             OPEN CURS                                         
+             END-EXEC.                                         
+             IF SQLCODE NOT =0                                 
+             DISPLAY 'ERROR CURSOR'                            
+             PERFORM CLOSE-PARA                                
+             END-IF.                                           
+ FETCH-CURSOR.                                                 
+             EVALUATE SQLCODE                                  
+             WHEN 0                                            
+             EXEC SQL                                          
+             FETCH CURS                                           
+             INTO :DEP-DEPT-NUMBER,:DEP-DEPT-NAME                 
+             END-EXEC                                             
+             IF SQLCODE NOT =100 THEN                             
+             MOVE DEP-DEPT-NUMBER TO FS-DEPT-NUMBER               
+             MOVE DEP-DEPT-NAME TO FS-DEPT-NAME                   
+             WRITE EMPREC                                         
+             END-IF                                               
+             WHEN 100                                             
+             DISPLAY 'LAST RECORD'                                
+             MOVE 'Y' TO WS-FOS                                   
+             WHEN OTHER                                           
+             DISPLAY 'ERROR FETCH'                                
+             END-EVALUATE.                                        
+ CLOSE-CURSOR.                                                    
+             EXEC SQL                                             
+             CLOSE CURS                                           
+             END-EXEC.                                            
+ CLOSE-PARA.                                                      
+             STOP RUN.                                     

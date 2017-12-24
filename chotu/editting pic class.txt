@@ -1,0 +1,22 @@
+       IDENTIFICATION DIVISION.                                        
+       PROGRAM-ID. COBPRAC.                                            
+       ENVIRONMENT DIVISION.                                           
+       DATA DIVISION.                                                  
+       WORKING-STORAGE SECTION.                                        
+       01 WS-SALARY    PIC 9(5)V9(5).                                  
+       01 SALARY       PIC 9(5).9(5).                                  
+       01 DO-SAL       PIC $9(5).9(5).                                 
+       01 DO-SAL1      PIC  $ZZZZZ.ZZZZZ.                              
+       PROCEDURE DIVISION.                                             
+       1000-MAIN-PARA.                                                 
+                   MOVE 100.20 TO WS-SALARY.                           
+                   DISPLAY 'SALARY BEFORE COMPUTE = ' WS-SALARY.       
+                   COMPUTE WS-SALARY = WS-SALARY * 100.                
+                   MOVE WS-SALARY TO SALARY.                           
+                   DISPLAY 'SALARY AFTER COMPUTE = '  SALARY.          
+                   MOVE SALARY TO DO-SAL.                              
+                   DISPLAY 'DO SALARY IS = ' DO-SAL.                   
+
+                  MOVE SALARY TO DO-SAL1.                              
+                  DISPLAY 'DO SALARY IS = ' DO-SAL1.                   
+                  STOP RUN.                                            

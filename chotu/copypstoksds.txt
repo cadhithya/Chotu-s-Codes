@@ -1,0 +1,113 @@
+       IDENTIFICATION DIVISION.                                         
+       PROGRAM-ID. CHOMAN1.                                             
+       ENVIRONMENT DIVISION.                                            
+       INPUT-OUTPUT SECTION.                                            
+       FILE-CONTROL.                                                    
+                SELECT PF-FILE ASSIGN TO INDD                           
+                ORGANIZATION IS SEQUENTIAL                              
+                ACCESS MODE IS SEQUENTIAL                               
+                FILE STATUS IS WS-FS1.                                  
+                SELECT KF-FILE ASSIGN TO OTDD                           
+                ORGANIZATION IS INDEXED                                 
+                ACCESS MODE IS DYNAMIC                                  
+                RECORD KEY IS KF-ID                                     
+                FILE STATUS IS WS-FS2.                                  
+      *********************************************************         
+       DATA DIVISION.                                                   
+       FILE SECTION.                                                    
+       FD KF-FILE.                                                      
+       01 KF-REC.                                                       
+             05  KF-NAME          PIC   X(30).                          
+             05  FILLER           PIC   X.                              
+             05  KF-ID            PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  KF-ACCNO         PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  KF-BANK          PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  KF-CITY          PIC   X(10).                          
+             05  FILLER           PIC   X.                              
+             05  KF-DATE          PIC   X(8).                           
+             05  FILLER           PIC   X(12).                          
+       FD PF-FILE.                                                      
+       01 PF-REC.                                                       
+             05  PF-NAME          PIC   X(30).                          
+             05  FILLER           PIC   X.                              
+             05  PF-ID            PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  PF-ACCNO         PIC   X(5).                         
+             05  FILLER           PIC   X.                            
+             05  PF-BANK          PIC   X(5).                         
+             05  FILLER           PIC   X.                            
+             05  PF-CITY          PIC   X(10).                        
+             05  FILLER           PIC   X.                            
+             05  PF-DATE          PIC   X(8).                         
+             05  FILLER           PIC   X(12).                        
+       WORKING-STORAGE SECTION.                                       
+      *******************************************************         
+       01   WS-FS1        PIC   XX.                                   
+       01   WS-FS2        PIC   XX.                                   
+       01   WS-EOF1       PIC   X     VALUE 'N'.                      
+      ********************************************************        
+       PROCEDURE DIVISION.                                            
+       1000-MAIN-PARA.                                                
+               PERFORM 1000-OPEN-PARA.                                
+               PERFORM 1000-READ-PARA UNTIL WS-EOF1 ='Y'.             
+               PERFORM 1000-CLOSE-PARA.                               
+
+               PERFORM 1000-STOP-PARA.                                 
+      ********************************************************         
+      ********************************************************         
+       1000-OPEN-PARA.                                                 
+              OPEN INPUT PF-FILE.                                      
+              IF WS-FS1 NOT = '00' THEN                                
+                 DISPLAY ' ERROR IN FILE ',WS-FS1                      
+              PERFORM 1000-STOP-PARA                                   
+              END-IF.                                                  
+              OPEN I-O   KF-FILE.                                      
+              IF WS-FS2 NOT = '00' THEN                                
+                 DISPLAY ' ERROR IN FILE ',WS-FS1                      
+              PERFORM 1000-STOP-PARA                                   
+              END-IF.                                                  
+      ********************************************************         
+      ********************************************************         
+       1000-READ-PARA.                                                 
+              READ PF-FILE AT END MOVE 'Y' TO WS-EOF1.                 
+              IF WS-EOF1 NOT = 'Y' THEN                                
+
+ ===>                                                  Scroll ===> CSR  
+              PERFORM 1000-KSDS-PARA                                    
+              ELSE                                                      
+              PERFORM 1000-CLOSE-PARA                                   
+              END-IF.                                                   
+      ********************************************************          
+      ********************************************************          
+       1000-KSDS-PARA.                                                  
+              MOVE PF-REC TO KF-REC.                                    
+              READ KF-FILE  INVALID KEY                                 
+                   PERFORM 1000-INST-PARA NOT                           
+                   INVALID KEY PERFORM 1000-UPDT-PARA.                  
+      ********************************************************          
+      ********************************************************          
+       1000-INST-PARA.                                                  
+              WRITE KF-REC.                                             
+      ********************************************************          
+      ********************************************************          
+       1000-UPDT-PARA.                                                  
+              MOVE PF-REC TO KF-REC.                                    
+
+              REWRITE KF-REC.                                       
+              DISPLAY 'REWRITE ERROR ',WS-FS2.                      
+      ********************************************************      
+      ********************************************************      
+       1000-CLOSE-PARA.                                             
+              CLOSE PF-FILE.                                        
+              CLOSE KF-FILE.                                        
+      ********************************************************      
+      ********************************************************      
+       1000-STOP-PARA.                                              
+              STOP RUN.                                             
+      *********************************************************     
+      **********************THE---END**************************     
+      *********************************************************     
+                                                                    

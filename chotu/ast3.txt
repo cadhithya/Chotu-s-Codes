@@ -1,0 +1,153 @@
+ IDENTIFICATION DIVISION.                           
+ PROGRAM-ID. COBOLPGM.                              
+*                                                   
+ ENVIRONMENT DIVISION.                              
+ INPUT-OUTPUT SECTION.                              
+ FILE CONTROL.                                      
+      SELECT FLATFILE ASSIGN TO INDD.               
+      ORGANIZATION IS SEQUENTIAL.                   
+      ACCESS MODE IS SEQUENTIAL.                    
+      FILE STATUS IS WS-FS.                         
+                                                    
+      SELECT OUTFILE ASSIGN TO OUTDD.               
+      ORGANIZATION IS SEQUENTIAL.                   
+      ACCESS MODE IS SEQUENTIAL.                    
+      FILE STATUS IS WS-FS1.                        
+*                                                   
+ DATA DIVISION.                                     
+ FILE SECTION.                                      
+ FD FLATFILE.                                              
+ 01 INP-REC.                                               
+    05 PERCENT PIC X(2).                                   
+    05 FILLER PIC X.                                       
+    05 YEAR PIC X(6).                                      
+    05 FILLER PIC X(71).                                   
+ FD OUTFILE.                                               
+ 01 OUTREC PIC X(80).                                      
+ WORKING-STORAGE DIVISION.                                 
+ 01 I PIC X VALUE ZEROES.                                  
+ 01 OLD-SALARY PIC 9(9).                                   
+ 01 NEW-SALARY PIC 9(9).                                   
+ 01 WS-FS PIC X(02).                                       
+ 01 WS-FS1 PIC X(02).                                      
+ 01 WS-EOF PIC X VALUE 'N'.                                
+ 01 YEARNEW PIC X(4).                                      
+ 01 HIKE.                                                  
+    05 ARRAY OCCURS 4 TIMES.                               
+       10 PERCENT1 PIC X(2).                               
+       10 FILLER PIC X.                                 
+       10 YEAR1 PIC X(6).                               
+       10 FILLER PIC X(71).                             
+ EXEC SQL                                               
+    INCLUDE SQLCA                                       
+ END-EXEC.                                              
+ EXEC SQL                                               
+    INCLUDE TRNGDEP                                     
+ END-EXEC.                                              
+ EXEC SQL                                               
+    INCLUDE TRNGEMPT                                    
+ END-EXEC.                                              
+ EXEC SQL                                               
+ DECLARE CURS CURSOR                                    
+ FOR                                                    
+ SELECT EMP_NUMBER,EMP_NAME,DOJ,PHONE_NUMBER,SALARY     
+ FROM EMPT_TABLE                                        
+ WHERE DPRT_NUMBER=DEPT-NUMBER                          
+ FOR UPDATE OF SALARY                                   
+ END EXEC.                                                  
+ LINKAGE SECTION.                                           
+    01 LS-LEN PIC S9(4) COMP.                               
+    01 LS-DEPT-NAME PIC X(40).                              
+ PROCEDURE DIVISION.                                        
+ 1000-MAIN-PARA.                                            
+     PERFORM 2000-OPEN-FILE-PARA.                           
+     PERFORM 9000-WRITE-HEADER.                             
+     PERFORM 2000-PROCESS-PARA.                             
+     PERFORM 2000-READ-FILE-PARA UNTIL WS-EOF='Y'.          
+     PERFORM 2000-OPEN-CURSOR-PARA.                         
+     PERFORM 2000-FETCH-CURSOR-PARA UNTIL WS-EOF1='Y'       
+     PERFORM 2000-CLOSE-CURSOR-PARA.                        
+     PERFORM 2000-CLOSE-FILE-PARA.                          
+     PERFORM 2000-EXIT.                                     
+ 2000-OPEN-FILE-PARA.                                       
+     OPEN INPUT FLATFILE                                    
+        IF WS-FS NOT ='00'                                  
+           DISPLAY 'ERROR OPEN IN INPUT FILE'               
+        END-IF                                               
+     OPEN OUTPUT OUTFILE                                     
+        IF WS-FS1 NOT ='00'                                  
+           DISPLAY 'ERROR OPEN IN OUTPUT FILE'               
+        END-IF                                               
+ 2000-OPEN-CURSOR-PARA.                                      
+     EXEC SQL                                                
+     OPEN CURS                                               
+     END-EXEC.                                               
+ 2000-READ-FILE-PARA.                                        
+     READ FLATFILE AT END MOVE 'Y' TO WS-EOF.                
+          ADD 01 TO I.                                       
+          MOVE PERCENT TO PERCENT1(I).                       
+          MOVE YEAR TO YEAR1(I).                             
+ 2000-FETCH-CURSOR-PARA.                                     
+     EXEC SQL                                                
+     FETCH CURS                                              
+     INTO                                                    
+     :EMP-EMP-NUMBER,:EMP-EMP-NAME,:EMP-DOJ,                 
+     :EMP-PHONE-NUMBER,:EMP-SALARY                         
+     END-EXEC.                                             
+     EVALUATE SQLCODE                                      
+     WHEN 0                                                
+     PERFORM 2000-CALC-PARA.                               
+     WHEN 100                                              
+     MOVE 'Y' TO WS-EOF1.                                  
+ 2000-PROCESS-PARA.                                        
+     EXEC SQL                                              
+     SELECT DEPT_NUMBER                                    
+     INTO :DEPT-NUMBER                                     
+     FROM DEPT_TABLE                                       
+     WHERE DEPT_NAME=LS-DEPT-NAME                          
+     END-EXEC.                                             
+ 2000-CALC-PARA.                                           
+     MOVE EMP-DOJ TO YEARNEW.                              
+     EVALUATE TRUE                                         
+     WHEN YEARNEW<=YEAR1(1)                                
+      MOVE PERCENT1(1) TO PERCENTAGE                       
+     WHEN YEARNEW<=YEAR1(2)                                       
+      MOVE PERCENT1(2) TO PERCENTAGE                              
+     WHEN YEARNEW<=YEAR1(3)                                       
+      MOVE PERCENT1(3) TO PERCENTAGE                              
+     WHEN OTHERS                                                  
+      MOVE PERCENT1(4) TO PERCENTAGE                              
+     END-EVALUATE.                                                
+     COMPUTE NEW-SALARY=EMP-SALARY+((EMP-SALARY*PERCENTAGE)/100)  
+     PERFORM 2000-UPDATE-PARA.                                    
+ 2000-UPDATE-PARA.                                                
+     MOVE EMP-SALARY TO OLD-SALARY                                
+     MOVE NEW-SALARY TO EMP-SALARY                                
+     EXEC SQL                                                     
+        UPDATE EMPT_TABLE                                         
+        SET SALARY=:EMP-SALARY                                    
+        WHERE CURRENT OF CURS                                     
+     END-EXEC                                                     
+     PERFORM 2000-WRITE1-PARA.                                    
+ 9000-WRITE-HEADER.                                               	
+     STRING 'NAME                               'DELIMITED BY S
+            '        ' DELIMITED BY SIZE                       
+            'OLD SALARY' DELIMITED BY SIZE                     
+            'NEW SALARY' DELIMITED BY SIZE                     
+            INTO OUTREC.                                       
+     WRITE OUTREC.                                             
+ 2000-WRITE1-PARA.                                             
+     STRING EMP-NAME DELIMITED BY SIZE                         
+            OLD-SALARY DELIMITED BY SIZE                       
+            NEW-SALARY DELIMITED BY SIZE                       
+            INTO OUTREC.                                       
+     WRITE OUTREC.                                             
+ 2000-CLOSE-FILE-PARA.                                         
+     CLOSE FLATFILE.                                           
+     CLOSE OUTFILE.                                            
+ 2000-CLOSE-CURSOR-PARA.                                       
+     EXEC SQL                                                  
+     CLOSE CURS                                                
+     END-EXEC.                                                 
+ 2000-EXIT.                                             
+     STOP RUN.                                          

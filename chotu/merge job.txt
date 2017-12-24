@@ -1,0 +1,10 @@
+//TSOAVARN JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,       
+//         MSGLEVEL=(1,1)                                             
+//S1       EXEC PGM=SORT                                              
+//SORTIN1  DD DSN=TSOAVAR.CHOTU.PROGRAMS(INP1),DISP=SHR               
+//SORTIN2  DD DSN=TSOAVAR.CHOTU.PROGRAMS(INP2),DISP=SHR               
+//SORTOUT  DD SYSOUT=*                                                
+//SYSOUT   DD SYSOUT=*                                                
+//SYSIN    DD *                                                       
+           MERGE FIELDS=(1,3,CH,A)                                    
+/*                                                                    

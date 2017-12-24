@@ -1,0 +1,17 @@
+ IDENTIFICATION DIVISION.                                               
+ PROGRAM-ID. TRN1698C.                                                  
+ ENVIRONMENT DIVISION.                                                  
+ DATA DIVISION.                                                         
+ WORKING-STORAGE SECTION.                                               
+ 01 WS-NUM1.                                                            
+       05 NAME1 PIC X(5) VALUE 'CHOTU'.                                 
+       05 NAME2 PIC X(5).                                               
+ PROCEDURE DIVISION.                                                    
+ 1000-MAIN-PARA.                                                        
+      MOVE NAME1(5:1) TO NAME2(1:1).                                    
+      MOVE NAME1(4:1) TO NAME2(2:1).                                    
+      MOVE NAME1(3:1) TO NAME2(3:1).                                    
+      MOVE NAME1(2:1) TO NAME2(4:1).                                    
+      MOVE NAME1(1:1) TO NAME2(5:1).                                    
+      DISPLAY NAME2.                                                    
+      STOP RUN.                                                         

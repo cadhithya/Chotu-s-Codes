@@ -1,0 +1,20 @@
+SELECT *                                                                
+FROM                                                                    
+(SELECT DEPT_NAME, DEPT_NUMBER, COUNT(*) NUM,AVG(SALARY)                
+FROM                                                                    
+TGRPTRNG.EMPT_TABLE AS EMP,                                             
+TGRPTRNG.DEPT_TABLE AS DEPT                                             
+WHERE EMP.DPRT_NUMBER = DEPT.DEPT_NUMBER                                
+GROUP BY DEPT_NAME,DEPT_NUMBER)                                         
+AS TEMP                                                                 
+WHERE NUM >= 2;      
+
+
+SELECT DEPT_NAME                                                
+      ,DPRT_NUMBER                                              
+      ,COUNT(DPRT_NUMBER) AS COUNT                              
+      ,AVG(SALARY) AS AVG_SAL                                   
+  FROM TGRPTRNG.DEPT_TABLE INNER JOIN TGRPTRNG.EMPT_TABLE       
+    ON DEPT_NUMBER = DPRT_NUMBER                                
+ GROUP BY DEPT_NAME,DPRT_NUMBER                                 
+ HAVING COUNT(DPRT_NUMBER)>=2;                                                                                     

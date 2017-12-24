@@ -1,0 +1,27 @@
+       IDENTIFICATION DIVISION.                                         
+       PROGRAM-ID. TRN1698A.                                            
+       ENVIRONMENT DIVISION.                                            
+       DATA DIVISION.                                                   
+       WORKING-STORAGE SECTION.                                         
+           EXEC SQL                                                     
+              INCLUDE SQLCA                                             
+           END-EXEC.                                                    
+           EXEC SQL                                                     
+              INCLUDE TRNGEMPT                                          
+           END-EXEC.                                                    
+       PROCEDURE DIVISION.                                              
+       1000-MAIN-PARA.                                                  
+           MOVE 101010101        TO EMP-EMP-NUMBER.                     
+           MOVE 'ADHICHO'        TO EMP-EMP-NAME.                       
+           EXEC SQL                                                     
+              UPDATE EMPT_TABLE SET                                     
+               EMP_NAME = :EMP-EMP-NAME                                 
+              WHERE EMP_NAME = 'CHOTU'                                
+          END-EXEC.                                                   
+          EVALUATE SQLCODE                                            
+            WHEN 0                                                    
+                DISPLAY 'UPDATE SUCCESSFULL'                          
+            WHEN 100                                                  
+                DISPLAY SQLCODE                                       
+          END-EVALUATE.                                               
+          STOP RUN.                                                   

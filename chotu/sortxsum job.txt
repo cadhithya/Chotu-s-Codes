@@ -1,0 +1,12 @@
+ //TSOAVARA JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,        
+ //         MSGLEVEL=(1,1)                                              
+ //P1       EXEC PGM=SORT                                               
+ //SORTIN   DD DSN=TSOAVAR.CHOTU.PROGRAMS(PS1),DISP=SHR                 
+ //SORTOUT  DD SYSOUT=*                                                 
+ //SORTXSUM DD SYSOUT=*                                                 
+ //SYSOUT   DD SYSOUT=*                                                 
+ //* REMOVING DUPLICATES AND DISPLAYING DUPLICATES                      
+ //SYSIN    DD *                                                        
+            SORT FIELDS=(31,10,CH,A)                                    
+            SUM FIELDS=NONE,XSUM                                        
+ /*                                                                     

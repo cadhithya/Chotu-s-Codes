@@ -1,0 +1,7 @@
+//TSOAVARE JOB 2121000,ADHITHYA,CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID,    
+//         MSGLEVEL=(1,1)                                             
+//       JCLLIB ORDER=TSOAVAR.TEST.PDS                                
+//STEP1  EXEC PROC=TESTPROC                                           
+//R010.SYSTSIN DD DSN=TSOAVAR.TRAINING.ASMNT3(CNTLCARD),DISP=SHR      
+//R010.INDD1   DD DSN=TSOAVAR.TRAIN.EMPLOYEE,DISP=SHR                 
+//R010.INDD2   DD DSN=TSOAVAR.CICS.DEPTFILE,DISP=SHR                  

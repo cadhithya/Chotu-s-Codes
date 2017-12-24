@@ -1,0 +1,95 @@
+      IDENTIFICATION DIVISION.                                         
+      PROGRAM-ID. CHOMAN1.                                             
+      ENVIRONMENT DIVISION.                                            
+      INPUT-OUTPUT SECTION.                                            
+      FILE-CONTROL.                                                    
+               SELECT PSFILE ASSIGN TO INDD                            
+               ORGANIZATION IS SEQUENTIAL                              
+               ACCESS MODE IS SEQUENTIAL                               
+               FILE STATUS IS WS-FS1.                                  
+               SELECT KSFILE ASSIGN TO OTDD                            
+               ORGANIZATION IS INDEXED                                 
+               ACCESS MODE IS DYNAMIC                                  
+               RECORD KEY IS KS-ID                                     
+               FILE STATUS IS WS-FS2.                                  
+     *********************************************************         
+      DATA DIVISION.                                                   
+      FILE SECTION.                                                    
+      FD PSFILE.                                                       
+       01 PS-REC.                                                       
+             05  PS-NAME          PIC   X(30).                          
+             05  FILLER           PIC   X.                              
+             05  PS-ID            PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  PS-ACCNO         PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  PS-BANK          PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  PS-CITY          PIC   X(10).                          
+             05  FILLER           PIC   X.                              
+             05  PS-DATE          PIC   X(8).                           
+             05  FILLER           PIC   X(12).                          
+       FD KSFILE.                                                       
+       01 KF-REC.                                                       
+             05  KS-NAME          PIC   X(30).                          
+             05  FILLER           PIC   X.                              
+             05  KS-ID            PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+
+             05  KF-ACCNO         PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  KF-BANK          PIC   X(5).                           
+             05  FILLER           PIC   X.                              
+             05  KF-CITY          PIC   X(10).                          
+             05  FILLER           PIC   X.                              
+             05  KF-DATE          PIC   X(8).                           
+             05  FILLER           PIC   X(12).                          
+       WORKING-STORAGE SECTION.                                         
+      *******************************************************           
+       01   WS-FS1        PIC   XX.                                     
+       01   WS-FS2        PIC   XX.                                     
+       01   WS-EOF1       PIC   X     VALUE 'N'.                        
+      ********************************************************          
+       PROCEDURE DIVISION.                                              
+       1000-MAIN-PARA.                                                  
+               PERFORM 1000-OPEN-PARA.                                  
+               PERFORM 1000-READ-PARA UNTIL WS-EOF1 ='Y'.               
+               PERFORM 1000-CLOSE-PARA.                                 
+              PERFORM 1000-STOP-PARA.                                  
+     ********************************************************          
+     ********************************************************          
+      1000-OPEN-PARA.                                                  
+             OPEN INPUT PSFILE.                                        
+             IF WS-FS1 NOT = '00' THEN                                 
+                DISPLAY ' ERROR IN FILE ',WS-FS1                       
+             PERFORM 1000-STOP-PARA                                    
+             END-IF.                                                   
+             OPEN I-O   KSFILE.                                        
+             IF WS-FS2 NOT = '00' THEN                                 
+                DISPLAY ' ERROR IN FILE ',WS-FS1                       
+             PERFORM 1000-STOP-PARA                                    
+             END-IF.                                                   
+     ********************************************************          
+     ********************************************************          
+      1000-READ-PARA.                                                  
+             READ PSFILE AT END MOVE 'Y' TO WS-EOF1.                   
+             IF WS-EOF1 NOT = 'Y' THEN                                 
+              PERFORM 1000-PROC-PARA                                    
+              ELSE                                                      
+              END-IF.                                                   
+      ********************************************************          
+      ********************************************************          
+       1000-PROC-PARA.                                                  
+              MOVE PS-REC TO KF-REC.                                    
+              WRITE KF-REC.                                             
+      ********************************************************          
+      ********************************************************          
+       1000-CLOSE-PARA.                                                 
+              CLOSE PSFILE.                                             
+              CLOSE KSFILE.                                             
+      ********************************************************          
+      ********************************************************          
+       1000-STOP-PARA.                                                  
+              STOP RUN.                                                 
+      *********************************************************         
+      **********************THE---END**************************         

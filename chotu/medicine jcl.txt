@@ -1,0 +1,28 @@
+ //TSOAVARA JOB 212100,TSOAVAR,CLASS=I,MSGCLASS=X,NOTIFY=TSOAVAR,       
+ //             MSGLEVEL=(1,1)                                          
+ //STEP1    EXEC PGM=SORT                                               
+ //SORTIN   DD DSN=TSOAVAR.CHOTU.MEDICINE(PS1),DISP=SHR                 
+ //SORTOUT  DD DSN=TSOAVAR.CHOTU.MEDICINE.PS2,                          
+ //            DISP=(NEW,CATLG,DELETE),                                 
+ //            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                     
+ //            SPACE=(TRK,(5,1,0),RLSE)                                 
+ //SYSOUT   DD SYSOUT=*                                                 
+ //SYSIN    DD *                                                        
+               SORT FIELDS=(1,3,CH,A)                                   
+ /*                                                                     
+ //STEP2    EXEC PGM=SORT                                               
+ //SORTIN   DD DSN=TSOAVAR.CHOTU.MEDICINE.PS2,DISP=SHR                  
+ //F1       DD DSN=TSOAVAR.CHOTU.MEDICINE.PS3,                          
+ //            DISP=(NEW,CATLG,DELETE),                                 
+ //            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                     
+ //            SPACE=(TRK,(5,1,0),RLSE)                                 
+ //F2       DD DSN=TSOAVAR.CHOTU.MEDICINE.PS4,                          
+ //            DISP=(NEW,CATLG,DELETE),                                 
+ //            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                     
+ //            SPACE=(TRK,(5,1,0),RLSE)                                 
+ //SYSOUT   DD SYSOUT=*                                                 
+ //SYSIN    DD *                                                        
+               SORT FIELDS=(1,3,CH,A)                                   
+               OUTFIL FNAMES=F1,INCLUDE=(9,7,CH,EQ,C'EXP    ')          
+               OUTFIL FNAMES=F2,INCLUDE=(9,7,CH,EQ,C'NOT-EXP')          
+ /*                                                                     

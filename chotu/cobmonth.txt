@@ -1,0 +1,38 @@
+       IDENTIFICATION DIVISION.                                         
+       PROGRAM-ID. CHOJIN.                                              
+       ENVIRONMENT DIVISION.                                            
+       DATA DIVISION.                                                   
+       WORKING-STORAGE SECTION.                                         
+       01 WS-DATE  PIC X(10).                                           
+       01 MONTH.                                                        
+               05 ARRAY PIC X(20) OCCURS 12 TIMES.                      
+       01 STR-DAY  PIC 9(2).                                            
+       01 STR-MON  PIC 9(2).                                            
+       01 STR-YEAR PIC 9(2).                                            
+       LINKAGE SECTION.                                                 
+       01 LSREC.                                                        
+             05 LS-LEN   PIC S9(4) COMP.                                
+             05 LS-VAL   PIC X(10).                                     
+       PROCEDURE DIVISION USING LSREC.                                  
+       1000-MAIN-PARA.                                                  
+            MOVE LS-VAL TO WS-DATE.                                     
+            PERFORM 1000-STRING-PARA.                                   
+            PERFORM 1000-DATE-PARA.                                     
+            DISPLAY ARRAY(STR-MON).                                     
+            STOP RUN.                                                   
+       1000-DATE-PARA.                                                  
+            MOVE 'JANUARY'    TO ARRAY(01).                             
+            MOVE 'FEBRUARY'   TO ARRAY(02).                             
+            MOVE 'MARCH  '    TO ARRAY(03).                             
+            MOVE 'APRIL  '   TO ARRAY(04).                              
+            MOVE 'MAY    '   TO ARRAY(05).                              
+            MOVE 'JUNE   '   TO ARRAY(06).                              
+            MOVE 'JULY   '   TO ARRAY(07).                              
+            MOVE 'AUGUST '   TO ARRAY(08).                              
+            MOVE 'SEPTEMBER' TO ARRAY(09).                              
+            MOVE 'OCTOBER'   TO ARRAY(10).                              
+            MOVE 'NOVEMBER'  TO ARRAY(11).                              
+            MOVE 'DECEMBER'  TO ARRAY(12).                              
+       1000-STRING-PARA.                                                
+            UNSTRING WS-DATE DELIMITED BY '/'                           
+           INTO STR-DAY,STR-MON,STR-YEAR.                           

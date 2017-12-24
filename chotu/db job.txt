@@ -1,0 +1,20 @@
+//TSOAVARL JOB 12345,TSOAVAR,CLASS=A,MSGCLASS=X,NOTIFY=TSOAVAR,     
+//        MSGLEVEL=(1,1)                                            
+//R010   EXEC PGM=IKJEFT1A                                          
+//STEPLIB INCLUDE MEMBER=SLIBDUMM                                   
+//        INCLUDE MEMBER=SLIBDEV1                                   
+//        INCLUDE MEMBER=SLDBTDB2                                   
+//SYSPRINT DD SYSOUT=*                                              
+//INDD     DD DSN=TSOAVAR.CHOTU.PROGRAMS(DEPTINP),DISP=OLD          
+//SYSOUT DD SYSOUT=*                                                
+//SYSTSPRT DD SYSOUT=*                                              
+//SYSTSIN DD *                                                      
+       DSN SYSTEM(TDB2)                                             
+       RUN PROGRAM(PARMCOB)-                                        
+           PLAN(PARMCOB)-                                           
+           PARM(123456147)                                          
+       END                                                          
+/*                                                                  
+//SYSABEND   DD  SYSOUT=A                                           
+ //SYSUDUMP   DD  SYSOUT=A                                              
+ //CEEDUMP   DD  SYSOUT=*                                               

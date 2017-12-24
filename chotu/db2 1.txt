@@ -1,0 +1,4 @@
+SELECT EMP_NAME,DEPT_NAME,DOJ FROM TGRPTRNG.EMPT_TABLE AS A         
+INNER JOIN                                                          
+TGRPTRNG.DEPT_TABLE AS B ON A.DPRT_NUMBER = B.DEPT_NUMBER           
+WHERE DOJ > '2012-12-01' ORDER BY DOJ ASC;                          
