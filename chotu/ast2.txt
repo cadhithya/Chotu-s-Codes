@@ -1,0 +1,179 @@
+ IDENTIFICATION DIVISION.                                      
+ PROGRAM-ID. CHOPROG.                                          
+ ENVIRONMENT DIVISION.                                         
+ INPUT-OUTPUT SECTION.                                         
+ FILE-CONTROL.                                                 
+              SELECT FILE1 ASSIGN TO INDD                      
+              ORGANIZATION IS SEQUENTIAL                       
+              ACCESS IS SEQUENTIAL                             
+              FILE STATUS IS WS-FS1.                           
+              SELECT FILE2 ASSIGN TO KSDS                      
+              ORGANIZATION IS INDEXED                          
+              ACCESS IS DYNAMIC                                
+              RECORD KEY IS FS-ID2                             
+              FILE STATUS IS WS-FS2.                           
+              SELECT FILE3 ASSIGN TO OUTDD                     
+              ORGANIZATION IS SEQUENTIAL                       
+              ACCESS IS SEQUENTIAL                              
+              FILE STATUS IS WS-FS3.                            
+ DATA DIVISION.                                                 
+ FILE SECTION.                                                  
+ FD FILE1.                                                      
+ 01 FS-REC1.                                                    
+       05  FS-NAME1                    PIC     X(29).           
+       05  FILLER                      PIC     X.               
+       05  FS-ID1                      PIC     9(5).            
+       05  FS-INCOME1                  PIC     9(9).            
+       05  FS-DOJ1                     PIC     X(8).            
+       05  FILLER                      PIC     X(28).           
+ FD FILE2.                                                      
+ 01 FS-REC2.                                                    
+       05 FS-NAME2                     PIC     X(29).           
+       05 FS-ID2                       PIC     9(5).            
+       05 FS-ACCNO                     PIC     9(9).            
+       05 FS-BANK                      PIC     X(3).            
+       05 FS-CITY                      PIC     X(10).           
+       05 FILLER                       PIC     X(24).             
+ FD FILE3.                                                        
+ 01 FS-REC3                            PIC     X(80).             
+ WORKING-STORAGE SECTION.                                         
+ 01 WS-FS1                             PIC     XX.                
+ 01 WS-FS2                             PIC     XX.                
+ 01 WS-FS3                             PIC     XX.                
+ 01 WS-EOF1                            PIC     X VALUE 'N'.       
+ 01 WS-EOF2                            PIC     X VALUE 'N'.       
+ 01 WS-EOF3                            PIC     X VALUE 'N'.       
+ 01 WS-CURDATE.                                                   
+       05 WS-YEAR                      PIC     9999.              
+       05 WS-MONTH                     PIC     99.                
+       05 WS-DAY                       PIC     99.                
+ 01 WS-REC.                                                       
+       05  WS-FNAME                    PIC     X(15).             
+       05  WS-LNAME                    PIC     X(15).             
+       05  WS-ID                       PIC     X(5).              
+       05  WS-ACCNO                    PIC     X(9).              
+       05  WS-BANK                     PIC     X(3).              
+       05  WS-INCOME                   PIC     9(9).              
+       05  WS-TAX                      PIC     9(2).              
+ 01 MONARR1.                                                      
+       05 ARR1   PIC X(3) OCCURS 12 TIMES.                        
+ 01 WS-REC1.                                                      
+       05  WS-FNAME1 PIC     X(15) VALUE 'FIRST NAME' .           
+       05  WS-LNAME1 PIC     X(15) VALUE 'SECOND NAME' .          
+       05  WS-ID1     PIC     X(5) VALUE 'INTID'           .      
+       05  WS-ACCNO1  PIC     X(9) VALUE 'ACCNO'.                 
+       05  WS-BANK1   PIC     X(4) VALUE 'BANK'         .         
+       05  WS-INCOME1 PIC     X(9) VALUE 'INCOME'  .              
+       05  WS-TAX1    PIC     X(3) VALUE 'TAX'.                   
+ 01 WS-DATE                            PIC     X(10).             
+ 01 WS-MONTH1                          PIC     X(3).              
+ PROCEDURE DIVISION.                                              
+ 1000-MAIN-PARA.                                                  
+       PERFORM 1000-OPEN-PARA.                                    
+       PERFORM 1000-READ-PARA.                                    
+       PERFORM 1000-CLOSE-PARA.                                   
+       PERFORM 1000-STOP-PARA.                                    
+*---------------------------------------------------------*       
+ 1000-OPEN-PARA.                                                  
+       OPEN INPUT FILE1.                                          
+       IF WS-FS1 NOT='00'                                         
+                 DISPLAY 'PS ' WS-FS1                             
+                 PERFORM 1000-STOP-PARA                           
+       END-IF.                                                    
+       OPEN I-O   FILE2.                                          
+       IF WS-FS2 NOT='00'                                         
+                 DISPLAY 'KSDS' WS-FS2                            
+                 PERFORM 1000-STOP-PARA                           
+       END-IF.                                                    
+       OPEN OUTPUT FILE3.                                         
+       IF WS-FS3 NOT='00'                                         
+                 DISPLAY 'OUTPUT' WS-FS3                          
+                 PERFORM 1000-STOP-PARA                           
+       END-IF.                                                    
+
+*-------------------------------------------------------------*   
+ 1000-READ-PARA.                                                  
+       PERFORM 1000-DATE-PARA.                                    
+       PERFORM 1000-WRITE-HEADER-PARA.                            
+       READ FILE1 AT END MOVE 'Y' TO WS-EOF1                      
+       DISPLAY 'INSIDE FILE1'.                                    
+       IF WS-EOF1 NOT = 'Y'                                       
+                 DISPLAY FS-NAME1                                 
+                 UNSTRING FS-NAME1 DELIMITED BY ' '               
+                 INTO WS-FNAME,WS-LNAME                           
+                 DISPLAY WS-LNAME                                 
+                 MOVE FS-INCOME1 TO WS-INCOME                     
+                 PERFORM 1000-TAX-PARA                            
+                 MOVE FS-ID1 TO FS-ID2                            
+                 READ FILE2 INVALID KEY PERFORM INVALID-PARA      
+                          NOT INVALID KEY                         
+                          PERFORM NOTINVALID-PARA                 
+        END-IF.                                                   
+ 1000-DATE-PARA.                                                  
+       MOVE FUNCTION CURRENT-DATE TO WS-CURDATE.                  
+       PERFORM 1000-MONTH-PARA.                                   
+       MOVE ARR1(WS-MONTH) TO WS-MONTH1.                          
+                                                                  
+       STRING 'TRANSACTION DATE IS  ' DELIMITED BY SIZE           
+              WS-DAY DELIMITED BY SIZE                            
+              ' ' DELIMITED BY SIZE                               
+              WS-MONTH1 DELIMITED BY SIZE                         
+              ' ' DELIMITED BY SIZE                               
+              WS-YEAR DELIMITED BY SIZE                           
+              INTO FS-REC3.                                       
+       WRITE FS-REC3.                                             
+*                                                                 
+ 1000-WRITE-HEADER-PARA.                                          
+       MOVE WS-REC1 TO FS-REC3.                                   
+       WRITE FS-REC3.                                             
+ 1000-WRITE-PARA.                                                 
+       MOVE WS-REC  TO FS-REC3.                                   
+       WRITE FS-REC3.                                             
+*                                                                 
+ 1000-TAX-PARA.                                                   
+       EVALUATE TRUE                                              
+                WHEN WS-INCOME >= 0 AND WS-INCOME <  49999        
+                     MOVE 10 TO WS-TAX                            
+                WHEN WS-INCOME >= 49999 AND WS-INCOME < 99999     
+                     MOVE 30 TO WS-TAX                            
+                WHEN WS-INCOME >= 10000                           
+                     MOVE 40 TO WS-TAX                            
+       END-EVALUATE.                                              
+       COMPUTE WS-INCOME = WS-INCOME + (WS-INCOME * WS-TAX / 100).
+*-------------------------------------------------------*         
+ 1000-MONTH-PARA.                                                 
+       MOVE 'JAN'             TO ARR1(1).                         
+       MOVE 'FEB'             TO ARR1(2).                         
+       MOVE 'MAR'             TO ARR1(3).                         
+       MOVE 'APR'             TO ARR1(4).                         
+       MOVE 'MAY'             TO ARR1(5).                         
+       MOVE 'JUN'             TO ARR1(6).                         
+                                                                  
+       MOVE 'JUL'             TO ARR1(7).                    
+       MOVE 'AUG'             TO ARR1(8).                    
+       MOVE 'SEP'             TO ARR1(9).                    
+       MOVE 'OCT'             TO ARR1(10).                   
+       MOVE 'NOV'             TO ARR1(11).                   
+       MOVE 'DEC'             TO ARR1(12).                   
+*----------------------------------------------------------- 
+ 1000-CLOSE-PARA.                                            
+       CLOSE FILE1.                                          
+       CLOSE FILE2.                                          
+       CLOSE FILE3.                                          
+ 1000-STOP-PARA.                                             
+       STOP RUN.                                             
+ NOTINVALID-PARA.                                            
+                      MOVE FS-ACCNO TO WS-ACCNO              
+                      DISPLAY FS-ACCNO                       
+                      DISPLAY WS-ACCNO                       
+                      MOVE FS-BANK  TO WS-BANK               
+                      MOVE FS-ID1   TO WS-ID                 
+                      PERFORM 1000-WRITE-PARA                
+                      .                                      
+  INVALID-PARA.                                              
+                      MOVE SPACES TO FS-BANK                 
+                      MOVE SPACES TO FS-CITY                 
+                      MOVE ZEROS  TO FS-ACCNO                
+                      MOVE FS-NAME1 TO FS-NAME2              
+                      WRITE FS-REC2                          
+          .                                                  
